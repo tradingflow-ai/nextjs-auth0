@@ -27,7 +27,7 @@ const getAccessTokenResponse = async ({
   if (authenticated) {
     const loginRes = await appRouterLogin(loginOpts);
     cookies.appSession = loginRes.cookies.get('appSession').value;
-    jest.doMock('next/headers', () => ({ cookies: () => loginRes.cookies }));
+    jest.doMock('next/headers', () => ({ cookies: () => Promise.resolve(loginRes.cookies) }));
   }
   await refreshTokenExchange(
     withApi,

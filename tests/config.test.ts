@@ -266,12 +266,12 @@ describe('config params', () => {
 
   test('getConfig should query RSC cookies to bail out of static rendering', async () => {
     const req = jest.mocked(new Auth0NextRequestCookies());
-    jest.spyOn(req, 'getCookies').mockImplementation(() => {
+    jest.spyOn(req, 'getCookies').mockImplementation(async () => {
       throw new Error('BAIL');
     });
     const getConfig = configSingletonGetter({}, () => '');
-    await expect(() => getConfig(req)).toThrow('BAIL');
-    await expect(() => getConfig(req)).not.toThrow('"secret" is required');
+    await (expect(() => getConfig(req)).rejects.toEqual(new Error('BAIL')));
+    await expect(() => getConfig(req)).rejects.not.toEqual(new Error('"secret" is required'));
     expect(req.getCookies).toHaveBeenCalled();
   });
 
@@ -281,8 +281,8 @@ describe('config params', () => {
       throw new Error('BAIL');
     });
     const getConfig = configSingletonGetter({}, () => '');
-    await expect(() => getConfig(req)).toThrow('BAIL');
-    await expect(() => getConfig(req)).not.toThrow('"secret" is required');
+    await (expect(() => getConfig(req)).rejects.toEqual(new Error('BAIL')));
+    await expect(() => getConfig(req)).rejects.not.toEqual(new Error('"secret" is required'));
     expect(req.getUrl).toHaveBeenCalled();
   });
 });

@@ -16,7 +16,7 @@ export default class Auth0NextApiRequest extends Auth0Request<NextApiRequest> {
   public getBody(): Record<string, string> {
     return this.req.body;
   }
-  public getCookies(): Record<string, string> {
+  public async getCookies(): Promise<Record<string, string>> {
     return this.req.cookies as Record<string, string>;
   }
 }

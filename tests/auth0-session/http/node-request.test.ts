@@ -25,14 +25,14 @@ describe('NodeRequest', () => {
   it('should get all cookies', async () => {
     const [req, , teardown] = await setup();
     req.headers.cookie = 'foo=bar; bar=baz;';
-    expect(new NodeRequest(req).getCookies()).toMatchObject({ foo: 'bar', bar: 'baz' });
+    expect(await new NodeRequest(req).getCookies()).toMatchObject({ foo: 'bar', bar: 'baz' });
     await teardown();
   });
 
   it('should get a cookie by name', async () => {
     const [req, , teardown] = await setup();
     req.headers.cookie = 'foo=bar; bar=baz;';
-    expect(new NodeRequest(req).getCookies()['foo']).toEqual('bar');
+    expect((await new NodeRequest(req).getCookies())['foo']).toEqual('bar');
     await teardown();
   });
 });

@@ -58,7 +58,7 @@ export default class TransientStore {
     {
       const cookieValue = await generateCookieValue(key, value, signingKey);
       // Set the cookie with the SameSite attribute and, if needed, the Secure flag.
-      res.setCookie(key, cookieValue, {
+      await res.setCookie(key, cookieValue, {
         ...basicAttr,
         sameSite,
         secure: isSameSiteNone ? true : basicAttr.secure
@@ -68,7 +68,7 @@ export default class TransientStore {
     if (isSameSiteNone && config.legacySameSiteCookie) {
       const cookieValue = await generateCookieValue(`_${key}`, value, signingKey);
       // Set the fallback cookie with no SameSite or Secure attributes.
-      res.setCookie(`_${key}`, cookieValue, basicAttr);
+      await res.setCookie(`_${key}`, cookieValue, basicAttr);
     }
 
     return value;
@@ -84,14 +84,14 @@ export default class TransientStore {
    * @return {String|undefined} Cookie value or undefined if cookie was not found.
    */
   async read(key: string, req: Auth0Request, res: Auth0Response): Promise<string | undefined> {
-    const cookies = req.getCookies();
+    const cookies = await req.getCookies();
     const cookie = cookies[key];
     const config = await this.getConfig(req);
     const cookieConfig = config.transactionCookie;
 
     const verifyingKeys = await this.getKeys(config);
     let value = await getCookieValue(key, cookie, verifyingKeys);
-    res.clearCookie(key, cookieConfig);
+    await res.clearCookie(key, cookieConfig);
 
     if (config.legacySameSiteCookie) {
       const fallbackKey = `_${key}`;
@@ -99,7 +99,7 @@ export default class TransientStore {
         const fallbackCookie = cookies[fallbackKey];
         value = await getCookieValue(fallbackKey, fallbackCookie, verifyingKeys);
       }
-      res.clearCookie(fallbackKey, cookieConfig);
+      await res.clearCookie(fallbackKey, cookieConfig);
     }
 
     return value;

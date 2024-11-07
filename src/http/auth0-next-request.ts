@@ -16,7 +16,7 @@ export default class Auth0NextRequest extends Auth0Request<NextRequest> {
   public async getBody(): Promise<Record<string, string> | string> {
     return this.req.text();
   }
-  public getCookies(): Record<string, string> {
+  public async getCookies(): Promise<Record<string, string>> {
     const { cookies } = this.req;
     if (typeof cookies.getAll === 'function') {
       return this.req.cookies.getAll().reduce((memo, { name, value }) => ({ ...memo, [name]: value }), {});

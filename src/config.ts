@@ -270,14 +270,16 @@ export const configSingletonGetter = (params: ConfigParameters = {}, genId: () =
     if (!config) {
       // Bails out of static rendering for Server Components
       // Need to query cookies because Server Components don't have access to URL
-      req.getCookies();
-      if ('getUrl' in req) {
-        // Bail out of static rendering for API Routes
-        // Reading cookies is not always enough https://github.com/vercel/next.js/issues/49006
-        req.getUrl();
-      }
-      config = getConfig({ ...params, session: { genId, ...params.session } });
+      return req.getCookies().then(() => {
+        if ('getUrl' in req) {
+          // Bail out of static rendering for API Routes
+          // Reading cookies is not always enough https://github.com/vercel/next.js/issues/49006
+          req.getUrl();
+        }
+        config = getConfig({ ...params, session: { genId, ...params.session } });
+        return config;
+      });
     }
-    return config;
+    return Promise.resolve(config);
   };
 };

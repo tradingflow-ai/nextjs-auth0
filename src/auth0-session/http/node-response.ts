@@ -9,7 +9,7 @@ export default class NodeResponse<T extends ServerResponse = ServerResponse> ext
     super(res);
   }
 
-  public setCookie(name: string, value: string, options?: CookieSerializeOptions) {
+  public async setCookie(name: string, value: string, options?: CookieSerializeOptions) {
     let cookies = this.res.getHeader('Set-Cookie') || [];
     if (!Array.isArray(cookies)) {
       cookies = [cookies as string];

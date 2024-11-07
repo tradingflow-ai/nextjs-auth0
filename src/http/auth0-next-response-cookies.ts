@@ -19,10 +19,10 @@ export default class Auth0NextResponseCookies extends Auth0ResponseCookies {
     super();
   }
 
-  public setCookie(name: string, value: string, options?: CookieSerializeOptions) {
+  public async setCookie(name: string, value: string, options?: CookieSerializeOptions) {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { cookies } = require('next/headers');
-    const cookieSetter = cookies();
+    const cookieSetter = await cookies();
     try {
       cookieSetter.set({ ...options, name, value });
     } catch (_) {
@@ -30,10 +30,10 @@ export default class Auth0NextResponseCookies extends Auth0ResponseCookies {
     }
   }
 
-  public clearCookie(name: string, options?: CookieSerializeOptions) {
+  public async clearCookie(name: string, options?: CookieSerializeOptions) {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { cookies } = require('next/headers');
-    const cookieSetter = cookies();
+    const cookieSetter = await cookies();
     try {
       cookieSetter.set({ ...options, name, value: '', expires: new Date(0) });
     } catch (_) {

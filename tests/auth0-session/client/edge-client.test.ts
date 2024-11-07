@@ -22,7 +22,7 @@ class TestReq extends Auth0Request<null> {
   getBody() {
     return { state: 'foo', code: 'bar' };
   }
-  getCookies() {
+  async getCookies(): Promise<Record<string, string>> {
     return {};
   }
   getMethod() {

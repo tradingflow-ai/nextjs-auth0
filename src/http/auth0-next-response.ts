@@ -8,12 +8,12 @@ export default class Auth0NextResponse extends Auth0Response<NextResponse> {
     super(res);
   }
 
-  public setCookie(name: string, value: string, options?: CookieSerializeOptions) {
+  public async setCookie(name: string, value: string, options?: CookieSerializeOptions) {
     this.res.cookies.set(name, value, options);
   }
 
-  public clearCookie(name: string, options?: CookieSerializeOptions) {
-    this.setCookie(name, '', { ...options, expires: new Date(0) });
+  public async clearCookie(name: string, options?: CookieSerializeOptions) {
+    await this.setCookie(name, '', { ...options, expires: new Date(0) });
   }
 
   public redirect(location: string, status = 302): void {

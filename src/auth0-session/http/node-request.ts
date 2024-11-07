@@ -20,7 +20,7 @@ export default class NodeRequest extends Auth0Request<IncomingMessage> {
     return (this.req as IncomingMessage & { body: Record<string, string> }).body;
   }
 
-  public getCookies(): Record<string, string> {
+  public async getCookies(): Promise<Record<string, string>> {
     return parse(this.req.headers.cookie || '');
   }
 }

@@ -33,7 +33,7 @@ describe('update-user', () => {
       // Note: An updated session from a React Server Component will not persist
       // because you can't write to a cookie from a RSC in Next.js
       // This test passes because we're mocking the dynamic `cookies` function.
-      jest.doMock('next/headers', () => ({ cookies: () => loginRes.cookies }));
+      jest.doMock('next/headers', () => ({ cookies: () => Promise.resolve(loginRes.cookies) }));
       const auth0Instance = initAuth0(withApi);
       const res = await getResponse({
         url: '/api/auth/update',

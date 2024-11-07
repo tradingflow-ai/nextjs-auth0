@@ -25,7 +25,7 @@ describe('with-page-auth-required ssr', () => {
 
     const getPageResponse = ({ config, cookies, returnTo, loginRes, params, searchParams }: any = {}) => {
       const res = loginRes || new NextResponse();
-      jest.doMock('next/headers', () => ({ cookies: () => res.cookies }));
+      jest.doMock('next/headers', () => ({ cookies: () => Promise.resolve(res.cookies) }));
       const opts = { ...withApi, ...config };
       const instance = initAuth0(opts);
       let headers = new Headers();

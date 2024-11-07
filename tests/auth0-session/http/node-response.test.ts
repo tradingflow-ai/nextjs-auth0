@@ -25,7 +25,7 @@ describe('NodeResponse', () => {
   it('should set a cookie', async () => {
     const [, res, teardown] = await setup();
     const setter = new NodeResponse(res);
-    setter.setCookie('foo', 'bar');
+    await setter.setCookie('foo', 'bar');
     expect(res.getHeader('Set-Cookie')).toEqual(['foo=bar']);
     await teardown();
   });
@@ -33,7 +33,7 @@ describe('NodeResponse', () => {
   it('should set a cookie with opts', async () => {
     const [, res, teardown] = await setup();
     const setter = new NodeResponse(res);
-    setter.setCookie('foo', 'bar', { httpOnly: true, sameSite: 'strict' });
+    await setter.setCookie('foo', 'bar', { httpOnly: true, sameSite: 'strict' });
     expect(res.getHeader('Set-Cookie')).toEqual(['foo=bar; HttpOnly; SameSite=Strict']);
     await teardown();
   });
@@ -42,7 +42,7 @@ describe('NodeResponse', () => {
     const [, res, teardown] = await setup();
     res.setHeader('Set-Cookie', 'foo=bar');
     const setter = new NodeResponse(res);
-    setter.setCookie('baz', 'qux');
+    await setter.setCookie('baz', 'qux');
     expect(res.getHeader('Set-Cookie')).toEqual(['foo=bar', 'baz=qux']);
     await teardown();
   });
@@ -50,7 +50,7 @@ describe('NodeResponse', () => {
   it('should clear cookies', async () => {
     const [, res, teardown] = await setup();
     const setter = new NodeResponse(res);
-    setter.clearCookie('foo');
+    await setter.clearCookie('foo');
     expect(res.getHeader('Set-Cookie')).toEqual(['foo=; Max-Age=0']);
     await teardown();
   });

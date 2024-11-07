@@ -50,7 +50,7 @@ export class StatefulSession<
   async getSession(req: Auth0RequestCookies): Promise<SessionPayload<Session> | undefined | null> {
     const config = await this.getConfig(req);
     const { name: sessionName } = config.session;
-    const cookies = req.getCookies();
+    const cookies = await req.getCookies();
     const keys = await this.getKeys(config);
     const sessionId = await getCookieValue(sessionName, cookies[sessionName], keys);
 
@@ -75,7 +75,7 @@ export class StatefulSession<
     const config = await this.getConfig(req);
     const store = await this.getStore(config);
     const { name: sessionName, genId } = config.session;
-    const cookies = req.getCookies();
+    const cookies = await req.getCookies();
     const keys = await this.getKeys(config);
     let sessionId = await getCookieValue(sessionName, cookies[sessionName], keys);
 
@@ -93,7 +93,7 @@ export class StatefulSession<
     }
     debug('set session %o', sessionId);
     const cookieValue = await generateCookieValue(sessionName, sessionId, keys[0]);
-    res.setCookie(sessionName, cookieValue, cookieOptions);
+    await res.setCookie(sessionName, cookieValue, cookieOptions);
     await store.set(sessionId, {
       header: { iat, uat, exp },
       data: session
@@ -107,14 +107,14 @@ export class StatefulSession<
   ): Promise<void> {
     const config = await this.getConfig(req);
     const { name: sessionName } = config.session;
-    const cookies = req.getCookies();
+    const cookies = await req.getCookies();
     const keys = await this.getKeys(config);
     const sessionId = await getCookieValue(sessionName, cookies[sessionName], keys);
 
     if (sessionId) {
       const store = await this.getStore(config);
       debug('deleting session %o', sessionId);
-      res.clearCookie(sessionName, cookieOptions);
+      await res.clearCookie(sessionName, cookieOptions);
       await store.delete(sessionId);
     }
   }

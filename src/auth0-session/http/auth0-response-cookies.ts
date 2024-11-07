@@ -1,9 +1,9 @@
 import { CookieSerializeOptions } from 'cookie';
 
 export default abstract class Auth0ResponseCookies {
-  public abstract setCookie(name: string, value: string, options?: CookieSerializeOptions): void;
+  public abstract setCookie(name: string, value: string, options?: CookieSerializeOptions): Promise<void>;
 
-  public clearCookie(name: string, options: CookieSerializeOptions = {}): void {
+  public clearCookie(name: string, options: CookieSerializeOptions = {}): Promise<void> {
     const { domain, path, secure, sameSite } = options;
     const clearOptions: CookieSerializeOptions = {
       domain,
@@ -16,6 +16,6 @@ export default abstract class Auth0ResponseCookies {
       clearOptions.secure = secure;
       clearOptions.sameSite = sameSite;
     }
-    this.setCookie(name, '', clearOptions);
+    return this.setCookie(name, '', clearOptions);
   }
 }
